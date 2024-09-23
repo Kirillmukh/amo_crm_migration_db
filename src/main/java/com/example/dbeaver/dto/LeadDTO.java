@@ -1,9 +1,18 @@
 package com.example.dbeaver.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@AllArgsConstructor
+@Getter
+@Setter
 public class LeadDTO {
     private String type; // leadTypeId (LeadType.java) -> name
     private String registerMethod; // RegisterMethodId (LeadRegisterMethod.java) -> name
-    private String createdOn;
+    private LocalDateTime createdOn;
     private String opportunity; // OpportunityId -> title
     private double budget;
     private ContactDTO qualifiedContact; // QualifiedContactId -> ?

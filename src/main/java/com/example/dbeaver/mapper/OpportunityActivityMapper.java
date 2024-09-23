@@ -5,7 +5,7 @@ import com.example.dbeaver.entity.account.Activity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ActivityMapper {
+public class OpportunityActivityMapper {
     public ActivityByCompanyDTO mapToDTO(Activity activity) {
         return new ActivityByCompanyDTO(
                 activity.getTitle(),

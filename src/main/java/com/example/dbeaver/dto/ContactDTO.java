@@ -1,7 +1,13 @@
 package com.example.dbeaver.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
 public class ContactDTO {
-    private String ownerId; // sqlIgnore
     private String name; // contact -> name
     private String jobTitle; // contact -> jobTitle
     private String company; // accountId -> name

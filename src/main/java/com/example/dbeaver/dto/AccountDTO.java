@@ -1,10 +1,14 @@
 package com.example.dbeaver.dto;
 
-import com.example.dbeaver.dto.util.ContactByCompanyDTO;
 import com.example.dbeaver.dto.util.OpportunityByAccountDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
-
+@AllArgsConstructor
+@Getter
+@Setter
 public class AccountDTO {
     private String name;
     private String alternativeName;

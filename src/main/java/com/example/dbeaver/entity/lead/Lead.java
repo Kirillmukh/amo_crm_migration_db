@@ -17,8 +17,14 @@ public class Lead {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+    @ManyToOne
+    @JoinColumn(name = "leadtypeid")
+    private LeadType leadType;
     @Column(name = "createdon")
     private LocalDateTime createdOn;
+    @ManyToOne
+    @JoinColumn(name = "registermethodid")
+    private LeadRegisterMethod leadRegisterMethod;
     @OneToOne
     @JoinColumn(name = "opportunityid")
     private Opportunity opportunity;
@@ -26,6 +32,7 @@ public class Lead {
     @ManyToOne
     @JoinColumn(name = "qualifiedcontactid")
     private Contact contact;
+    private String account;
     @Column(name = "usrpostinfo")
     private String usrPostInfo;
     @Column(name = "usrpriceinfofloat")
@@ -55,8 +62,16 @@ public class Lead {
     private LeadSource leadSource;
     @Column(name = "usryametrikaclientid")
     private String usrYaMetrikaClientId;
+    @Column(name = "bpmref")
+    private String bpmRef;
+    @ManyToOne
+    @JoinColumn(name = "webformid")
+    private GeneratedWebForm generatedWebForm;
     @ManyToOne
     @JoinColumn(name = "ownerid")
     private Contact owner;
+    @ManyToOne
+    @JoinColumn(name = "campaignid")
+    private Campaign campaign;
     private String commentary;
 }
