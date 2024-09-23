@@ -1,6 +1,7 @@
 package com.example.dbeaver.entity.opportunity;
 
 import com.example.dbeaver.entity.Event;
+import com.example.dbeaver.entity.account.Account;
 import com.example.dbeaver.entity.contact.Contact;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -38,4 +39,10 @@ public class Opportunity {
     @ManyToOne
     @JoinColumn(name = "contactid")
     private Contact contact;
+    @ManyToOne
+    @JoinColumn(name = "accountid")
+    private Account account;
+    @ManyToOne
+    @JoinColumn(name = "stageid")
+    private OpportunityStage opportunityStage;
 }

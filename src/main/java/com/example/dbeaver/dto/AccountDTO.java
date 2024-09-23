@@ -1,6 +1,9 @@
 package com.example.dbeaver.dto;
 
-import com.example.dbeaver.dto.util.SellsOfCompanyDTO;
+import com.example.dbeaver.dto.util.ContactByCompanyDTO;
+import com.example.dbeaver.dto.util.OpportunityByAccountDTO;
+
+import java.util.List;
 
 public class AccountDTO {
     private String name;
@@ -13,6 +16,6 @@ public class AccountDTO {
     private byte usrCompanyUseEDM;
     private String usrArchiveEvents;
     private String usrEventsOfRival;
-    private SellsOfCompanyDTO sellsByCompanyDTO;
+    private List<OpportunityByAccountDTO> opportunitiesByAccountDTO;
     private String usrPrimKontr;
 }
