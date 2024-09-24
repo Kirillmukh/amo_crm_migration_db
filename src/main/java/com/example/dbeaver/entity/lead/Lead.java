@@ -17,11 +17,13 @@ public class Lead {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+    @Column(name = "createdon")
+    private LocalDateTime createdOn;
+    @Column(name = "modifiedon")
+    private LocalDateTime modifiedOn;
     @ManyToOne
     @JoinColumn(name = "leadtypeid")
     private LeadType leadType;
-    @Column(name = "createdon")
-    private LocalDateTime createdOn;
     @ManyToOne
     @JoinColumn(name = "registermethodid")
     private LeadRegisterMethod leadRegisterMethod;

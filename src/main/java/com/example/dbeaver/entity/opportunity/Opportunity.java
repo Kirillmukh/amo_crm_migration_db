@@ -17,6 +17,10 @@ public class Opportunity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+    @Column(name = "createdon")
+    private LocalDateTime createdOn;
+    @Column(name = "modifiedon")
+    private LocalDateTime modifiedOn;
     private String title;
     @ManyToOne
     @JoinColumn(name = "usreventinopportid")
@@ -33,8 +37,6 @@ public class Opportunity {
     @ManyToOne
     @JoinColumn(name = "responsibledepartmentid")
     private OpportunityDepartment opportunityDepartment;
-    @Column(name = "createdon")
-    private LocalDateTime createdOn;
     private String description;
     @ManyToOne
     @JoinColumn(name = "contactid")

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "contact", schema = "dbo")
 @Getter
@@ -13,6 +15,10 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+    @Column(name = "createdon")
+    private LocalDateTime createdOn;
+    @Column(name = "modifiedon")
+    private LocalDateTime modifiedOn;
     private String name;
     @Column(name = "jobtitle")
     private String jobTitle;

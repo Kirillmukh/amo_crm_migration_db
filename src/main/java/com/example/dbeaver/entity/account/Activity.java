@@ -14,6 +14,10 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+    @Column(name = "createdon")
+    private LocalDateTime createdOn;
+    @Column(name = "modifiedon")
+    private LocalDateTime modifiedOn;
     private String title;
     @Column(name = "duedate")
     private LocalDateTime dueDate;
