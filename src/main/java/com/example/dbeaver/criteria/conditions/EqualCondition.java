@@ -1,0 +1,21 @@
+package com.example.dbeaver.criteria.conditions;
+
+import com.example.dbeaver.criteria.Condition;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+
+public class EqualCondition<T> implements Condition<T> {
+    private String fieldName;
+    private Object value;
+
+    public EqualCondition(String fieldName, Object value) {
+        this.fieldName = fieldName;
+        this.value = value;
+    }
+
+    @Override
+    public Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
+        return cb.equal(root.get(fieldName), value);
+    }
+}
