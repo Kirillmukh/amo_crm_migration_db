@@ -1,4 +1,4 @@
-package com.example.dbeaver.repository.queries;
+package com.example.dbeaver.criteria;
 
 import com.example.dbeaver.criteria.Condition;
 import com.example.dbeaver.criteria.Criteria;
@@ -25,12 +25,12 @@ public class CriteriaHelper {
             cq.where(predicateList.toArray(new Predicate[0]));
         }
 
-        List<Order> orderList = new ArrayList<>(criteria.getOrders().size());
+        List<jakarta.persistence.criteria.Order> orderList = new ArrayList<>(criteria.getOrders().size());
         for (com.example.dbeaver.criteria.Order<T> order : criteria.getOrders()) {
             orderList.add(order.toOrder(root, cb));
         }
         if (!orderList.isEmpty()) {
-            cq.orderBy(orderList.toArray(new Order[0]));
+            cq.orderBy(orderList.toArray(new jakarta.persistence.criteria.Order[0]));
         }
     }
     public static <T> void configureTypedQuery(TypedQuery<T> query, Criteria<T> criteria) {

@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpportunityActivityMapper {
     public ActivityByCompanyDTO mapToDTO(Activity activity) {
-        return new ActivityByCompanyDTO(
-                activity.getTitle(),
-                activity.getDueDate(),
-                activity.getActivityStatus().getName()
-        );
+        ActivityByCompanyDTO dto = new ActivityByCompanyDTO();
+        dto.setTitle(activity.getTitle());
+        dto.setDueDate(activity.getDueDate());
+        dto.setStatus(activity.getActivityStatus().getName());
+        return dto;
     }
 }

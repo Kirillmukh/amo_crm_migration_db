@@ -1,6 +1,7 @@
-package com.example.dbeaver.repository.queries;
+package com.example.dbeaver.repository.criteria;
 
 import com.example.dbeaver.criteria.Criteria;
+import com.example.dbeaver.criteria.CriteriaHelper;
 import com.example.dbeaver.entity.account.Activity;
 import com.example.dbeaver.entity.contact.Contact;
 import com.example.dbeaver.entity.opportunity.Opportunity;
@@ -16,9 +17,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class OpportunityCriteriaRepository {
+public class OpportunityCriteriaRepository extends CriteriaRepository<Opportunity, String> {
     @PersistenceContext
     private EntityManager em;
+
+    public OpportunityCriteriaRepository(Class<Opportunity> entityClass) {
+        super(entityClass);
+    }
 
     public List<Contact> getContactsByCompany(Criteria<Contact> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

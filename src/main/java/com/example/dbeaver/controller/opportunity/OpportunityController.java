@@ -20,16 +20,4 @@ public class OpportunityController {
     public List<?> findAll() {
         return repository.findAll();
     }
-    @GetMapping("/contacts")
-    public List<?> findContacts(@RequestParam("id") String accountId) {
-        return opportunityDTOService.getContactByCompanyDTO(accountId);
-    }
-    @GetMapping("/opportunities")
-    public List<?> findOpportunities(@RequestParam("id") String accountId) {
-        return opportunityDTOService.getOpportunityByCompanyDTO(accountId);
-    }
-    @GetMapping("/activities")
-    public List<?> findActivities(@RequestParam("id") String accountId) {
-        return opportunityDTOService.getActivityByCompanyDTO(accountId);
-    }
 }

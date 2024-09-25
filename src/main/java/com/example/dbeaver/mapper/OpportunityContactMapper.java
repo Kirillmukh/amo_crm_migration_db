@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpportunityContactMapper {
     public ContactByCompanyDTO mapToDTO(Contact contact) {
-        return new ContactByCompanyDTO(
-                contact.getName(),
-                contact.getJobTitle(),
-                contact.getMobilePhone(),
-                contact.getPhone()
-        );
+        ContactByCompanyDTO dto = new ContactByCompanyDTO();
+        dto.setName(contact.getName());
+        dto.setJobTitle(contact.getJobTitle());
+        dto.setMobilePhone(contact.getMobilePhone());
+        dto.setPhone(contact.getPhone());
+        return dto;
     }
 }

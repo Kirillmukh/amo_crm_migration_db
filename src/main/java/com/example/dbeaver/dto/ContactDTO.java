@@ -1,17 +1,17 @@
 package com.example.dbeaver.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class ContactDTO {
     private String name; // contact -> name
     private String jobTitle; // contact -> jobTitle
     private String company; // accountId -> name
-    private String workPhone; // contact -> phone
+    private String Phone; // contact -> phone
     private String mobilePhone; // contact -> mobilePhone
     private String email; // contact -> email
     private String alternativeEmail; // contact -> usrAdvancedEmail

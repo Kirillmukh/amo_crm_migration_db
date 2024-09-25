@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountOpportunityMapper {
     public OpportunityByAccountDTO mapToDTO(Opportunity opportunity) {
-        return new OpportunityByAccountDTO(
-                opportunity.getTitle(),
-                opportunity.getOpportunityStage().getName(),
-                opportunity.getEvent().getName(),
-                opportunity.getAmount()
-        );
+        OpportunityByAccountDTO dto = new OpportunityByAccountDTO();
+        dto.setTitle(opportunity.getTitle());
+        dto.setStage(opportunity.getOpportunityStage().getName());
+        dto.setEvent(opportunity.getEvent().getName());
+        dto.setAmount(opportunity.getAmount());
+        return dto;
     }
 }

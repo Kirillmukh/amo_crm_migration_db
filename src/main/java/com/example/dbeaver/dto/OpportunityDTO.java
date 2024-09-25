@@ -3,14 +3,14 @@ package com.example.dbeaver.dto;
 import com.example.dbeaver.dto.util.ActivityByCompanyDTO;
 import com.example.dbeaver.dto.util.ContactByCompanyDTO;
 import com.example.dbeaver.dto.util.OpportunityByCompanyDTO;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class OpportunityDTO {
