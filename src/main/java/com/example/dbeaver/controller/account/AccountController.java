@@ -5,7 +5,6 @@ import com.example.dbeaver.service.AccountDTOService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,9 +18,5 @@ public class AccountController {
     @GetMapping
     public List<?> findAll() {
         return repository.findAll();
-    }
-    @GetMapping("/opportunity")
-    public List<?> findOpportunities(@RequestParam("id") String accountId) {
-        return accountDTOService.getOpportunityByAccountDTO(accountId);
     }
 }
