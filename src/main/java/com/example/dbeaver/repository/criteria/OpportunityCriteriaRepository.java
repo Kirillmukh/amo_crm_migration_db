@@ -38,7 +38,7 @@ public class OpportunityCriteriaRepository extends CriteriaRepository<Opportunit
         return query.getResultList();
     }
 
-    public List<Opportunity> getSellsByCompany(Criteria<Opportunity> criteria) {
+    public List<Opportunity> getOpportunitiesByCompany(Criteria<Opportunity> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Opportunity> cq = cb.createQuery(Opportunity.class);
         Root<Opportunity> root = cq.from(Opportunity.class);

@@ -17,8 +17,8 @@ import java.util.List;
 public class OpportunityMapper {
     private final ContactMapper contactMapper;
     private final OpportunityDTOService opportunityDTOService;
-    public OpportunityDTO mapToDTO(Opportunity opportunity, List<OpportunityByCompanyDTO> opportunityByCompanyDTOList,
-               List<ActivityByCompanyDTO> activityByCompanyDTOList, List<ContactByCompanyDTO> contactByCompanyDTOList) {
+    public OpportunityDTO mapToDTO(Opportunity opportunity, List<ContactByCompanyDTO> contactByCompanyDTOList, List<OpportunityByCompanyDTO> opportunityByCompanyDTOList,
+               List<ActivityByCompanyDTO> activityByCompanyDTOList) {
         OpportunityDTO dto = new OpportunityDTO();
         dto.setTitle(opportunity.getTitle());
         dto.setUsrEventInOpportunity(opportunity.getEvent().getName());
@@ -30,9 +30,9 @@ public class OpportunityMapper {
         dto.setCreatedOn(opportunity.getCreatedOn());
         dto.setDescription(opportunity.getDescription());
         dto.setContactInOpportunity(contactMapper.mapToDTO(opportunity.getContact()));
+        dto.setContactsByCompanyDTO(contactByCompanyDTOList);
         dto.setSellsByCompanyDTO(opportunityByCompanyDTOList);
         dto.setActivitiesByCompanyDTO(activityByCompanyDTOList);
-        dto.setContactsByCompanyDTO(contactByCompanyDTOList);
         return dto;
     }
 }
