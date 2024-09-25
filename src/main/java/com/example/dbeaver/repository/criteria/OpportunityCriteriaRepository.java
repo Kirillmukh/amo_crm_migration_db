@@ -12,11 +12,9 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public class OpportunityCriteriaRepository extends CriteriaRepository<Opportunity, String> {
     @PersistenceContext
     private EntityManager em;
