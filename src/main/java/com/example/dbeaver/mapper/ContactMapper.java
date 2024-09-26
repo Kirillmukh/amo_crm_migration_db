@@ -28,7 +28,11 @@ public class ContactMapper {
         dto.setUsrOldEventsOfRivals(contact.getUsrOldEvents());
         dto.setUsrDiscCard(contact.getUsrDiscCard());
         dto.setModeration(moderation);
-        //  multilist
+        dto.setDoNotUseEmail(contact.getDoNotUseEmail());
+        dto.setDoNotUseCall(contact.getDoNotUseCall());
+        dto.setDoNotUseFax(contact.getDoNotUseFax());
+        dto.setDoNotUseSms(contact.getDoNotUseSms());
+        dto.setDoNotUsEmail(contact.getDoNotUsEmail());
         dto.setUsrPrimKontakta(contact.getUsrPrimKontakta());
         return dto;
     }

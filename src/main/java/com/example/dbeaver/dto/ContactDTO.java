@@ -24,20 +24,11 @@ public class ContactDTO {
     private String usrOldEventsOfRivals; // contact -> usrOldEvents
     private int usrDiscCard; // contact -> UsrDiscCard
     private String moderation; // usrModerationId (UsrModeration.java) -> name
-
-    /* multilist
-//    @Column(name = "donotuseemail")
     private byte doNotUseEmail;
-//    @Column(name = "donotusecall")
     private byte doNotUseCall;
-//    @Column(name = "donotusefax")
-//    byte doNotUseFax;
-//    @Column(name = "donotusesms")
+    byte doNotUseFax;
     private byte doNotUseSms;
-//    @Column(name = "donotusemail")
     private byte doNotUsEmail;
-     */
-
     private String usrPrimKontakta; // contact -> usrPrimKontakta // notes
 
 

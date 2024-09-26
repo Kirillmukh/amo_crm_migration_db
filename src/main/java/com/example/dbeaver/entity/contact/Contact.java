@@ -52,9 +52,16 @@ public class Contact {
     @ManyToOne
     @JoinColumn(name = "usrmoderationid")
     private UsrModeration usrModeration;
-    /*
-    мультисписок
-     */
+    @Column(name = "donotuseemail")
+    byte doNotUseEmail;
+    @Column(name = "donotusecall")
+    byte doNotUseCall;
+    @Column(name = "donotusefax")
+    byte doNotUseFax;
+    @Column(name = "donotusesms")
+    byte doNotUseSms;
+    @Column(name = "donotusemail")
+    byte doNotUsEmail;
     @Column(name = "usrprimkontakta")
     private String usrPrimKontakta;
 }
