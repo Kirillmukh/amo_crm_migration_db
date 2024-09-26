@@ -3,7 +3,6 @@ package com.example.dbeaver.mapper;
 import com.example.dbeaver.dto.AccountDTO;
 import com.example.dbeaver.dto.util.OpportunityByAccountDTO;
 import com.example.dbeaver.entity.account.Account;
-import com.example.dbeaver.service.AccountDTOService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class AccountMapper {
-    private final AccountDTOService accountDTOService;
     public AccountDTO mapToDTO(Account account, List<OpportunityByAccountDTO> opportunityByAccountDTOList) {
         AccountDTO dto = new AccountDTO();
         dto.setName(account.getName());

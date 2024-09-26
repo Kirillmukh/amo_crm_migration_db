@@ -68,13 +68,13 @@ public class DefaultFacade implements Facade {
     private List<ContactDTO> getContactDTO() {
         Criteria<Contact> criteria = new Criteria<>();
         setConditionsForAll(criteria);
-        List<ContactDTO> result = contactRepository.findAll(criteria).stream().map(contactMapper::mapToDTO).toList();
+        List<ContactDTO> result = contactRepository.findAll(criteria).parallelStream().map(contactMapper::mapToDTO).toList();
         return result;
     }
     private List<LeadDTO> getLeadDTO() {
         Criteria<Lead> criteria = new Criteria<>();
         setConditionsForAll(criteria);
-        List<LeadDTO> result = leadRepository.findAll(criteria).stream().map(leadMapper::mapToDTO).toList();
+        List<LeadDTO> result = leadRepository.findAll(criteria).parallelStream().map(leadMapper::mapToDTO).toList();
         return result;
     }
     private List<OpportunityDTO> getOpportunityDTO() {

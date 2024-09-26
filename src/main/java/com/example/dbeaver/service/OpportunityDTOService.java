@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -51,6 +52,9 @@ public class OpportunityDTOService {
 
     public List<ContactByCompanyDTO> getContactByCompanyDTO(Account account) {
         Criteria<Contact> criteria = new Criteria<>();
+        if (account == null) {
+            return List.of();
+        }
         criteria.addCondition(new EqualCondition<>("account", account));
         return this.criteriaRepository.getContactsByCompany(criteria).stream()
                 .map(contactMapper::mapToDTO).toList();
@@ -58,6 +62,9 @@ public class OpportunityDTOService {
 
     public List<OpportunityByCompanyDTO> getOpportunityByCompanyDTO(Account account) {
         Criteria<Opportunity> criteria = new Criteria<>();
+        if (account == null) {
+            return List.of();
+        }
         criteria.addCondition(new EqualCondition<>("account", account));
         return this.criteriaRepository.getOpportunitiesByCompany(criteria).stream()
                 .map(opportunityMapper::mapToDTO).toList();
@@ -65,6 +72,9 @@ public class OpportunityDTOService {
 
     public List<ActivityByCompanyDTO> getActivityByCompanyDTO(Account account) {
         Criteria<Activity> criteria = new Criteria<>();
+        if (account == null) {
+            return List.of();
+        }
         criteria.addCondition(new EqualCondition<>("account", account));
         return this.criteriaRepository.getActivitiesByCompany(criteria).stream()
                 .map(activityMapper::mapToDTO).toList();
