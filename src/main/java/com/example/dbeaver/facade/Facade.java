@@ -17,4 +17,9 @@ public interface Facade {
     List<ResponseContactDTO> findContacts();
     List<ResponseOpportunityDTO> findOpportunities();
     List<ResponseCompanyDTO> findCompanies();
+
+    List<ResponseLeadDTO> findLeads(int limit, int offset);
+    List<ResponseContactDTO> findContacts(int limit, int offset);
+    List<ResponseOpportunityDTO> findOpportunities(int limit, int offset);
+    List<ResponseCompanyDTO> findCompanies(int limit, int offset);
 }

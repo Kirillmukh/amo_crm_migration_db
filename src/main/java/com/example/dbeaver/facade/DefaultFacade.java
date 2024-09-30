@@ -19,6 +19,7 @@ import com.example.dbeaver.repository.ContactCriteriaRepository;
 import com.example.dbeaver.repository.LeadCriteriaRepository;
 import com.example.dbeaver.repository.OpportunityCriteriaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -133,6 +134,7 @@ public class DefaultFacade implements Facade {
     }
 
     @Override
+    @Cacheable(value = "opportunity", unless = "result != null")
     public List<ResponseOpportunityDTO> findOpportunities() {
         Criteria<Opportunity> opportunityCriteria = new Criteria<>();
         this.setConditionsForAll(opportunityCriteria);
@@ -158,5 +160,48 @@ public class DefaultFacade implements Facade {
         }
     }
 
+    @Override
+    public List<ResponseLeadDTO> findLeads(int limit, int offset) {
+        Criteria<Lead> leadCriteria = new Criteria<>();
+        leadCriteria.setLimit(limit);
+        leadCriteria.setOffset(offset);
+        this.setConditionsForAll(leadCriteria);
+        leadCriteria.addCondition(new IsNotNullCondition<>("id"));
+        List<ResponseLeadDTO> result = leadRepository.findAll(leadCriteria).parallelStream()
+                .map(lead -> findLeadById(lead.getId())).toList();
+        return result;
+    }
 
+    @Override
+    public List<ResponseContactDTO> findContacts(int limit, int offset) {
+        Criteria<Contact> contactCriteria = new Criteria<>();
+        contactCriteria.setLimit(limit);
+        contactCriteria.setOffset(offset);
+        this.setConditionsForAll(contactCriteria);
+        List<ResponseContactDTO> result = contactRepository.findAll(contactCriteria).parallelStream()
+                .map(contact -> findContactById(contact.getId())).toList();
+        return result;
+    }
+
+    @Override
+    public List<ResponseOpportunityDTO> findOpportunities(int limit, int offset) {
+        Criteria<Opportunity> opportunityCriteria = new Criteria<>();
+        opportunityCriteria.setLimit(limit);
+        opportunityCriteria.setOffset(offset);
+        this.setConditionsForAll(opportunityCriteria);
+        List<ResponseOpportunityDTO> result = opportunityRepository.findAll(opportunityCriteria).parallelStream()
+                .map(opportunity -> findOpportunityById(opportunity.getId())).toList();
+        return result;
+    }
+
+    @Override
+    public List<ResponseCompanyDTO> findCompanies(int limit, int offset) {
+        Criteria<Account> accountCriteria = new Criteria<>();
+        accountCriteria.setLimit(limit);
+        accountCriteria.setOffset(offset);
+        this.setConditionsForAll(accountCriteria);
+        List<ResponseCompanyDTO> result = accountRepository.findAll(accountCriteria).parallelStream()
+                .map(account -> findCompanyById(account.getId())).toList();
+        return result;
+    }
 }

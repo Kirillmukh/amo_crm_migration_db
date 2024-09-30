@@ -5,15 +5,19 @@ import com.example.dbeaver.exception.WrongIdException;
 import com.example.dbeaver.facade.Facade;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequiredArgsConstructor
 public class MainController {
-    private final Facade facade;
+        private final Facade facade;
     @GetMapping("/lead/{id}")
     public Response leadById(@PathVariable String id) {
         return Response.ok(facade.findLeadById(id)).status(200).build();
@@ -44,8 +48,14 @@ public class MainController {
         return Response.ok(facade.findOpportunityById(id)).status(200).build();
     }
     @GetMapping("/opportunity")
-    public Response opportunities() {
-        return Response.ok(facade.findOpportunities()).status(200).build();
+    public Response opportunities(@RequestParam(name = "limit", defaultValue = "500", required = false) int limit,
+                                  @RequestParam(name = "offset", defaultValue = "0", required = false) int offset) {
+        List<ResponseOpportunityDTO> result = facade.findOpportunities(limit, offset);
+
+        CollectionModel<ResponseOpportunityDTO> model = CollectionModel.of(result,
+                linkTo(methodOn(MainController.class).opportunities(limit, Math.max(0, offset - 1))).withRel("prevOrFirst"),
+                linkTo(methodOn(MainController.class).opportunities(limit, offset + 1)).withRel("next"));
+        return Response.ok(model).status(200).build();
     }
     @GetMapping("/entity")
     public ResponseEntity<List<ResponseOpportunityDTO>> findOpportunityEntities() {
