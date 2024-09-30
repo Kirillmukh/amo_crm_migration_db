@@ -1,4 +1,4 @@
-package com.example.dbeaver.repository.criteria;
+package com.example.dbeaver.repository;
 
 import com.example.dbeaver.criteria.Criteria;
 import com.example.dbeaver.criteria.conditions.EqualCondition;

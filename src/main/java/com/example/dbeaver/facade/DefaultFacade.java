@@ -14,10 +14,10 @@ import com.example.dbeaver.entity.lead.Lead;
 import com.example.dbeaver.entity.opportunity.Opportunity;
 import com.example.dbeaver.exception.WrongIdException;
 import com.example.dbeaver.mapper.response.ResponseMapper;
-import com.example.dbeaver.repository.criteria.AccountCriteriaRepository;
-import com.example.dbeaver.repository.criteria.ContactCriteriaRepository;
-import com.example.dbeaver.repository.criteria.LeadCriteriaRepository;
-import com.example.dbeaver.repository.criteria.OpportunityCriteriaRepository;
+import com.example.dbeaver.repository.AccountCriteriaRepository;
+import com.example.dbeaver.repository.ContactCriteriaRepository;
+import com.example.dbeaver.repository.LeadCriteriaRepository;
+import com.example.dbeaver.repository.OpportunityCriteriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

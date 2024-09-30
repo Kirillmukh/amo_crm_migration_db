@@ -4,10 +4,10 @@ import com.example.dbeaver.entity.account.Account;
 import com.example.dbeaver.entity.contact.Contact;
 import com.example.dbeaver.entity.lead.Lead;
 import com.example.dbeaver.entity.opportunity.Opportunity;
-import com.example.dbeaver.repository.criteria.AccountCriteriaRepository;
-import com.example.dbeaver.repository.criteria.ContactCriteriaRepository;
-import com.example.dbeaver.repository.criteria.LeadCriteriaRepository;
-import com.example.dbeaver.repository.criteria.OpportunityCriteriaRepository;
+import com.example.dbeaver.repository.AccountCriteriaRepository;
+import com.example.dbeaver.repository.ContactCriteriaRepository;
+import com.example.dbeaver.repository.LeadCriteriaRepository;
+import com.example.dbeaver.repository.OpportunityCriteriaRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
