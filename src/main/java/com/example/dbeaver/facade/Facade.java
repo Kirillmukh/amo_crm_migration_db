@@ -13,11 +13,6 @@ public interface Facade {
     ResponseContactDTO findContactById(String id);
     ResponseOpportunityDTO findOpportunityById(String id);
     ResponseCompanyDTO findCompanyById(String id);
-    List<ResponseLeadDTO> findLeads();
-    List<ResponseContactDTO> findContacts();
-    List<ResponseOpportunityDTO> findOpportunities();
-    List<ResponseCompanyDTO> findCompanies();
-
     List<ResponseLeadDTO> findLeads(int limit, int offset);
     List<ResponseContactDTO> findContacts(int limit, int offset);
     List<ResponseOpportunityDTO> findOpportunities(int limit, int offset);

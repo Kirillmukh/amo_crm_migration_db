@@ -103,7 +103,7 @@ public class DefaultFacade implements Facade {
         List<Opportunity> opportunities = contacts.parallelStream()// all nulls because sql
                 .filter(Objects::nonNull)
                 .map(contact -> {
-                    Criteria<Opportunity> localOpportunityCriteria= new Criteria<>(opportunityCriteria); // opportunities after 01.03.2024 // all null
+                    Criteria<Opportunity> localOpportunityCriteria = new Criteria<>(opportunityCriteria); // opportunities after 01.03.2024 // all null
                     localOpportunityCriteria.addCondition(new EqualCondition<>("owner", contact)); // checked owner
                     return opportunityRepository.findAll(localOpportunityCriteria);
                 })
@@ -114,46 +114,8 @@ public class DefaultFacade implements Facade {
         return responseMapper.mapToCompanyDTO(account, leads, opportunities, contacts);
     }
 
-    @Override
-    public List<ResponseLeadDTO> findLeads()  {
-        Criteria<Lead> leadCriteria = new Criteria<>();
-        this.setConditionsForAll(leadCriteria);
-        leadCriteria.addCondition(new IsNotNullCondition<>("id"));
-        List<ResponseLeadDTO> result = leadRepository.findAll(leadCriteria).parallelStream()
-                .map(lead -> findLeadById(lead.getId())).toList();
-        return result;
-    }
-
-    @Override
-    public List<ResponseContactDTO> findContacts() {
-        Criteria<Contact> contactCriteria = new Criteria<>();
-        this.setConditionsForAll(contactCriteria);
-        List<ResponseContactDTO> result = contactRepository.findAll(contactCriteria).parallelStream()
-                .map(contact -> findContactById(contact.getId())).toList();
-        return result;
-    }
-
-    @Override
-    @Cacheable(value = "opportunity", unless = "result != null")
-    public List<ResponseOpportunityDTO> findOpportunities() {
-        Criteria<Opportunity> opportunityCriteria = new Criteria<>();
-        this.setConditionsForAll(opportunityCriteria);
-        List<ResponseOpportunityDTO> result = opportunityRepository.findAll(opportunityCriteria).parallelStream()
-                .map(opportunity -> findOpportunityById(opportunity.getId())).toList();
-        return result;
-    }
-
-    @Override
-    public List<ResponseCompanyDTO> findCompanies() {
-        Criteria<Account> accountCriteria = new Criteria<>();
-        this.setConditionsForAll(accountCriteria);
-        List<ResponseCompanyDTO> result = accountRepository.findAll(accountCriteria).parallelStream()
-                .map(account -> findCompanyById(account.getId())).toList();
-        return result;
-    }
-
-    private void setConditionsForAll(Criteria<?> ... criteries) {
-        for (Criteria<?> criteria : criteries) {
+    private void setConditionsForAll(Criteria<?>... criterias) {
+        for (Criteria<?> criteria : criterias) {
             criteria.addCondition(new GreaterThanCondition<>("createdOn", LocalDateTime.of(2024, 3, 1, 0, 0)));
             criteria.addCondition(new IsNotNullCondition<>("id"));
             criteria.unionConditionWithAnd();
