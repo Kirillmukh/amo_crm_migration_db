@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -27,17 +28,19 @@ public class ResponseMapper {
     public ResponseLeadDTO mapToLeadDTO(Lead lead, Account account, List<Contact> contacts) {
         ResponseLeadDTO responseLeadDTO = new ResponseLeadDTO();
         responseLeadDTO.setLead(leadMapper.mapToDTO(lead));
-        responseLeadDTO.setCompany(accountMapper.mapToDTO(account));
-        responseLeadDTO.setContacts(contacts.stream().map(contactMapper::mapToDTO).toList());
+        if (Objects.nonNull(account))
+            responseLeadDTO.setCompany(accountMapper.mapToDTO(account));
+        if (Objects.nonNull(contacts))
+            responseLeadDTO.setContacts(contacts.stream().map(contactMapper::mapToDTO).toList());
         return responseLeadDTO;
     }
 
     public ResponseContactDTO mapToContactDTO(Contact contact, List<Lead> leads, List<Opportunity> opportunities, Account account) {
         ResponseContactDTO responseContactDTO = new ResponseContactDTO();
         responseContactDTO.setContact(contactMapper.mapToDTO(contact));
-        responseContactDTO.setLeads(leads.stream().map(leadMapper::mapToDTO).toList());
-        responseContactDTO.setOpportunities(opportunities.stream().map(opportunityMapper::mapToDTO).toList());
-        if (account != null) {
+        responseContactDTO.setLeads(leads.parallelStream().map(leadMapper::mapToDTO).toList());
+        responseContactDTO.setOpportunities(opportunities.parallelStream().map(opportunityMapper::mapToDTO).toList());
+        if (Objects.nonNull(account)) {
             responseContactDTO.setCompany(accountMapper.mapToDTO(account));
         }
         return responseContactDTO;
@@ -46,17 +49,19 @@ public class ResponseMapper {
     public ResponseOpportunityDTO mapToOpportunityDTO(Opportunity opportunity, List<Contact> contacts, Account account) {
         ResponseOpportunityDTO responseOpportunityDTO = new ResponseOpportunityDTO();
         responseOpportunityDTO.setOpportunity(opportunityMapper.mapToDTO(opportunity));
-        responseOpportunityDTO.setContacts(contacts.stream().map(contactMapper::mapToDTO).toList());
-        responseOpportunityDTO.setCompany(accountMapper.mapToDTO(account));
+        responseOpportunityDTO.setContacts(contacts.parallelStream().map(contactMapper::mapToDTO).toList());
+        if (Objects.nonNull(account)) {
+            responseOpportunityDTO.setCompany(accountMapper.mapToDTO(account));
+        }
         return responseOpportunityDTO;
     }
 
     public ResponseCompanyDTO mapToCompanyDTO(Account account, List<Lead> leads, List<Opportunity> opportunities, List<Contact> contacts) {
         ResponseCompanyDTO responseCompanyDTO = new ResponseCompanyDTO();
         responseCompanyDTO.setCompany(accountMapper.mapToDTO(account));
-        responseCompanyDTO.setLeads(leads.stream().map(leadMapper::mapToDTO).toList());
-        responseCompanyDTO.setOpportunities(opportunities.stream().map(opportunityMapper::mapToDTO).toList());
-        responseCompanyDTO.setContacts(contacts.stream().map(contactMapper::mapToDTO).toList());
+        responseCompanyDTO.setLeads(leads.parallelStream().map(leadMapper::mapToDTO).toList());
+        responseCompanyDTO.setOpportunities(opportunities.parallelStream().map(opportunityMapper::mapToDTO).toList());
+        responseCompanyDTO.setContacts(contacts.parallelStream().map(contactMapper::mapToDTO).toList());
         return responseCompanyDTO;
     }
 }

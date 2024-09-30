@@ -32,7 +32,7 @@ public class CompositeCondition<T, K extends Comparable<K>> implements Condition
     }
 
     @Override
-    public Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
+    public  Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
         List<Predicate> predicates = conditions.stream()
                 .map(condition -> condition.toPredicate(root, cb))
                 .toList();

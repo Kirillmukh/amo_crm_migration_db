@@ -39,12 +39,17 @@ public class DefaultFacade implements Facade {
         Criteria<Contact> contactCriteria = new Criteria<>();
         this.setConditionsForAll(contactCriteria);
         Lead lead = leadRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
-        if (lead.getOwner() == null) {
-            return null;
+        if (lead.getContact() == null) {
+            return responseMapper.mapToLeadDTO(lead, null, null);
         }
-        Account account = lead.getOwner().getAccount(); // TODO OWNER OR CONTACT
-        contactCriteria.addCondition(new EqualCondition<>("account", account));
-        List<Contact> contacts = contactRepository.findAll(contactCriteria);
+        Account account = lead.getContact().getAccount(); // TODO OWNER OR CONTACT // checked only contact
+        List<Contact> contacts = List.of(lead.getContact());
+        if (account == null) {
+            System.out.println("account id null; contact id = " + lead.getContact().getId());
+        } else {
+            contactCriteria.addCondition(new EqualCondition<>("account", account));
+            contacts = contactRepository.findAll(contactCriteria);
+        }
         return responseMapper.mapToLeadDTO(lead, account, contacts);
     }
 
@@ -55,12 +60,9 @@ public class DefaultFacade implements Facade {
         this.setConditionsForAll(leadCriteria, opportunityCriteria);
         Contact contact = contactRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
         Account account = contact.getAccount();
-        if (account == null) {
-            System.out.println("account id null; contact id = " + id);
-        }
-        leadCriteria.addCondition(new EqualCondition<>("contact", contact));
+        leadCriteria.addCondition(new EqualCondition<>("contact", contact)); // checked
         List<Lead> leads = leadRepository.findAll(leadCriteria);
-        opportunityCriteria.addCondition(new EqualCondition<>("owner", contact));
+        opportunityCriteria.addCondition(new EqualCondition<>("owner", contact)); // checked all null by date
         List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
         return responseMapper.mapToContactDTO(contact, leads, opportunities, account);
     }
@@ -69,38 +71,42 @@ public class DefaultFacade implements Facade {
     public ResponseOpportunityDTO findOpportunityById(String id) {
         Criteria<Contact> contactCriteria = new Criteria<>();
         Opportunity opportunity = opportunityRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
-        if (opportunity.getOwner() == null) {
-            return null;
+        Account account = opportunity.getOwner().getAccount();
+        List<Contact> contacts = List.of(opportunity.getOwner());
+        if (account == null) {
+            System.out.println("account id null; contact id = " + id);
+        } else {
+            contactCriteria.addCondition(new EqualCondition<>("account", account));
+            contacts = contactRepository.findAll(contactCriteria);
         }
-        Account account = opportunity.getOwner().getAccount(); // TODO OWNER OR CONTACT
-        contactCriteria.addCondition(new EqualCondition<>("account", account.getId()));
-        List<Contact> contacts = contactRepository.findAll(contactCriteria);
         return responseMapper.mapToOpportunityDTO(opportunity, contacts, account);
     }
 
     @Override
     public ResponseCompanyDTO findCompanyById(String id) {
-        Criteria<Contact> contactCriteria = new Criteria<>();
         Criteria<Opportunity> opportunityCriteria = new Criteria<>();
         Criteria<Lead> leadCriteria = new Criteria<>();
         this.setConditionsForAll(leadCriteria, opportunityCriteria);
         Account account = accountRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
+        Criteria<Contact> contactCriteria = new Criteria<>();
         contactCriteria.addCondition(new EqualCondition<>("account", account));
         List<Contact> contacts = contactRepository.findAll(contactCriteria);
-        List<Lead> leads = contacts.stream()
+        List<Lead> leads = contacts.parallelStream()
+                .filter(Objects::nonNull)
                 .map(contact -> {
-                    Criteria<Lead> localLeadCriteria = new Criteria<>(leadCriteria);
-                    localLeadCriteria.addCondition(new EqualCondition<>("owner", contact));
+                    Criteria<Lead> localLeadCriteria = new Criteria<>(leadCriteria); // leads after 01.03.2024
+                    localLeadCriteria.addCondition(new EqualCondition<>("contact", contact)); // checked contact
                     return leadRepository.findAll(localLeadCriteria);
                 })
-                .flatMap(List::stream).toList();
-        List<Opportunity> opportunities = contacts.stream()
+                .flatMap(List::parallelStream).toList();
+        List<Opportunity> opportunities = contacts.parallelStream()// all nulls because sql
+                .filter(Objects::nonNull)
                 .map(contact -> {
-                    Criteria<Opportunity> localOpportunityCriteria= new Criteria<>(opportunityCriteria);
-                    localOpportunityCriteria.addCondition(new EqualCondition<>("owner", contact));
+                    Criteria<Opportunity> localOpportunityCriteria= new Criteria<>(opportunityCriteria); // opportunities after 01.03.2024 // all null
+                    localOpportunityCriteria.addCondition(new EqualCondition<>("owner", contact)); // checked owner
                     return opportunityRepository.findAll(localOpportunityCriteria);
                 })
-                .flatMap(List::stream)
+                .flatMap(List::parallelStream)
                 .toList();
 //        opportunityCriteria.addCondition(new EqualCondition<>("accountid", account.getId()));
 //        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
@@ -111,8 +117,9 @@ public class DefaultFacade implements Facade {
     public List<ResponseLeadDTO> findLeads()  {
         Criteria<Lead> leadCriteria = new Criteria<>();
         this.setConditionsForAll(leadCriteria);
-        List<Lead> leads = leadRepository.findAll(leadCriteria);
-        List<ResponseLeadDTO> result = leads.stream().map(lead -> findLeadById(lead.getId())).toList();
+        leadCriteria.addCondition(new IsNotNullCondition<>("id"));
+        List<ResponseLeadDTO> result = leadRepository.findAll(leadCriteria).parallelStream()
+                .map(lead -> findLeadById(lead.getId())).toList();
         return result;
     }
 
@@ -120,9 +127,7 @@ public class DefaultFacade implements Facade {
     public List<ResponseContactDTO> findContacts() {
         Criteria<Contact> contactCriteria = new Criteria<>();
         this.setConditionsForAll(contactCriteria);
-        List<Contact> contacts = contactRepository.findAll(contactCriteria);
-        List<ResponseContactDTO> result = contacts.stream()
-                .filter(Objects::nonNull)
+        List<ResponseContactDTO> result = contactRepository.findAll(contactCriteria).parallelStream()
                 .map(contact -> findContactById(contact.getId())).toList();
         return result;
     }
@@ -131,8 +136,7 @@ public class DefaultFacade implements Facade {
     public List<ResponseOpportunityDTO> findOpportunities() {
         Criteria<Opportunity> opportunityCriteria = new Criteria<>();
         this.setConditionsForAll(opportunityCriteria);
-        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
-        List<ResponseOpportunityDTO> result = opportunities.stream()
+        List<ResponseOpportunityDTO> result = opportunityRepository.findAll(opportunityCriteria).parallelStream()
                 .map(opportunity -> findOpportunityById(opportunity.getId())).toList();
         return result;
     }
@@ -141,8 +145,7 @@ public class DefaultFacade implements Facade {
     public List<ResponseCompanyDTO> findCompanies() {
         Criteria<Account> accountCriteria = new Criteria<>();
         this.setConditionsForAll(accountCriteria);
-        List<Account> accounts = accountRepository.findAll(accountCriteria);
-        List<ResponseCompanyDTO> result = accounts.stream()
+        List<ResponseCompanyDTO> result = accountRepository.findAll(accountCriteria).parallelStream()
                 .map(account -> findCompanyById(account.getId())).toList();
         return result;
     }

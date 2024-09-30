@@ -1,9 +1,10 @@
 package com.example.dbeaver.criteria;
 
-import com.example.dbeaver.criteria.Condition;
-import com.example.dbeaver.criteria.Criteria;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

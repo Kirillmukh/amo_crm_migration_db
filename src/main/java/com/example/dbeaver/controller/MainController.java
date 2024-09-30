@@ -1,13 +1,14 @@
 package com.example.dbeaver.controller;
 
+import com.example.dbeaver.dto.response.ResponseOpportunityDTO;
 import com.example.dbeaver.exception.WrongIdException;
 import com.example.dbeaver.facade.Facade;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,6 +46,10 @@ public class MainController {
     @GetMapping("/opportunity")
     public Response opportunities() {
         return Response.ok(facade.findOpportunities()).status(200).build();
+    }
+    @GetMapping("/entity")
+    public ResponseEntity<List<ResponseOpportunityDTO>> findOpportunityEntities() {
+        return ResponseEntity.ok(facade.findOpportunities());
     }
 
     @ExceptionHandler(WrongIdException.class)
