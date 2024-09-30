@@ -20,4 +20,11 @@ public class ResponseDTO {
     private List<ContactDTO> contactDTOList;
     private List<LeadDTO> leadDTOList;
     private List<OpportunityDTO> opportunityDTOList;
+
+    /*
+    private Account account;
+    private List<Contact> contacts;
+    private List<List<Lead>> lead; (contact -> List<Lead>)
+    private List<Opportunity>O
+     */
 }

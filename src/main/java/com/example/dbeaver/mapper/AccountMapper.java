@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class AccountMapper {
-    public AccountDTO mapToDTO(Account account, List<OpportunityByAccountDTO> opportunityByAccountDTOList) {
+    public AccountDTO mapToDTO(Account account) {
         AccountDTO dto = new AccountDTO();
         dto.setName(account.getName());
         dto.setAlternativeName(account.getAlternativeName());
@@ -23,7 +23,6 @@ public class AccountMapper {
         dto.setUsrCompanyUseEDM(account.getUsrCompanyUseEDM());
         dto.setUsrArchiveEvents(account.getUsrArchiveEvents());
         dto.setUsrEventsOfRival(account.getUsrEventsOfRival());
-        dto.setOpportunitiesByAccountDTO(opportunityByAccountDTOList);
         dto.setUsrPrimKontr(account.getUsrPrimKontr());
         return dto;
     }

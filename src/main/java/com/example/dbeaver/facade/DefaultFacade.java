@@ -1,98 +1,159 @@
 package com.example.dbeaver.facade;
 
 import com.example.dbeaver.criteria.Criteria;
+import com.example.dbeaver.criteria.conditions.EqualCondition;
 import com.example.dbeaver.criteria.conditions.GreaterThanCondition;
-import com.example.dbeaver.dto.AccountDTO;
-import com.example.dbeaver.dto.ContactDTO;
-import com.example.dbeaver.dto.LeadDTO;
-import com.example.dbeaver.dto.OpportunityDTO;
-import com.example.dbeaver.dto.response.ResponseDTO;
-import com.example.dbeaver.dto.util.ActivityByCompanyDTO;
-import com.example.dbeaver.dto.util.ContactByCompanyDTO;
-import com.example.dbeaver.dto.util.OpportunityByAccountDTO;
-import com.example.dbeaver.dto.util.OpportunityByCompanyDTO;
+import com.example.dbeaver.criteria.conditions.IsNotNullCondition;
+import com.example.dbeaver.dto.response.ResponseCompanyDTO;
+import com.example.dbeaver.dto.response.ResponseContactDTO;
+import com.example.dbeaver.dto.response.ResponseLeadDTO;
+import com.example.dbeaver.dto.response.ResponseOpportunityDTO;
 import com.example.dbeaver.entity.account.Account;
 import com.example.dbeaver.entity.contact.Contact;
 import com.example.dbeaver.entity.lead.Lead;
 import com.example.dbeaver.entity.opportunity.Opportunity;
-import com.example.dbeaver.mapper.AccountMapper;
-import com.example.dbeaver.mapper.ContactMapper;
-import com.example.dbeaver.mapper.LeadMapper;
-import com.example.dbeaver.mapper.OpportunityMapper;
+import com.example.dbeaver.exception.WrongIdException;
+import com.example.dbeaver.mapper.response.ResponseMapper;
 import com.example.dbeaver.repository.criteria.AccountCriteriaRepository;
 import com.example.dbeaver.repository.criteria.ContactCriteriaRepository;
 import com.example.dbeaver.repository.criteria.LeadCriteriaRepository;
 import com.example.dbeaver.repository.criteria.OpportunityCriteriaRepository;
-import com.example.dbeaver.service.AccountDTOService;
-import com.example.dbeaver.service.OpportunityDTOService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class DefaultFacade implements Facade {
     private final AccountCriteriaRepository accountRepository;
-    private final AccountDTOService accountDTOService;
-    private final AccountMapper accountMapper;
     private final ContactCriteriaRepository contactRepository;
-    private final ContactMapper contactMapper;
     private final LeadCriteriaRepository leadRepository;
-    private final LeadMapper leadMapper;
     private final OpportunityCriteriaRepository opportunityRepository;
-    private final OpportunityDTOService opportunityDTOService;
-    private final OpportunityMapper opportunityMapper;
+    private final ResponseMapper responseMapper;
+
     @Override
-    public ResponseDTO getResponse() {
-        ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setAccountDTOList(getAccountDTO());
-        responseDTO.setContactDTOList(getContactDTO());
-        responseDTO.setLeadDTOList(getLeadDTO());
-        responseDTO.setOpportunityDTOList(getOpportunityDTO());
-        return responseDTO;
-    }
-    private List<AccountDTO> getAccountDTO() {
-        Criteria<Account> criteria = new Criteria<>();
-        setConditionsForAll(criteria);
-        List<Account> accounts = accountRepository.findAll(criteria);
-        List<AccountDTO> result = new ArrayList<>(accounts.size());
-        for (Account account : accounts) {
-            List<OpportunityByAccountDTO> opportunityByAccountDTO = accountDTOService.getOpportunityByAccountDTO(account);
-            result.add(accountMapper.mapToDTO(account, opportunityByAccountDTO));
+    public ResponseLeadDTO findLeadById(String id) {
+        Criteria<Contact> contactCriteria = new Criteria<>();
+        this.setConditionsForAll(contactCriteria);
+        Lead lead = leadRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
+        if (lead.getOwner() == null) {
+            return null;
         }
-        return result;
+        Account account = lead.getOwner().getAccount(); // TODO OWNER OR CONTACT
+        contactCriteria.addCondition(new EqualCondition<>("account", account));
+        List<Contact> contacts = contactRepository.findAll(contactCriteria);
+        return responseMapper.mapToLeadDTO(lead, account, contacts);
     }
-    private List<ContactDTO> getContactDTO() {
-        Criteria<Contact> criteria = new Criteria<>();
-        setConditionsForAll(criteria);
-        List<ContactDTO> result = contactRepository.findAll(criteria).parallelStream().map(contactMapper::mapToDTO).toList();
-        return result;
-    }
-    private List<LeadDTO> getLeadDTO() {
-        Criteria<Lead> criteria = new Criteria<>();
-        setConditionsForAll(criteria);
-        List<LeadDTO> result = leadRepository.findAll(criteria).parallelStream().map(leadMapper::mapToDTO).toList();
-        return result;
-    }
-    private List<OpportunityDTO> getOpportunityDTO() {
-        Criteria<Opportunity> criteria = new Criteria<>();
-        setConditionsForAll(criteria);
-        List<Opportunity> opportunities = opportunityRepository.findAll(criteria);
-        List<OpportunityDTO> result = new ArrayList<>(opportunities.size());
-        for (Opportunity opportunity : opportunities) {
-            List<ContactByCompanyDTO> contactByCompanyDTO = opportunityDTOService.getContactByCompanyDTO(opportunity.getAccount());
-            List<OpportunityByCompanyDTO> opportunityByCompanyDTO = opportunityDTOService.getOpportunityByCompanyDTO(opportunity.getAccount());
-            List<ActivityByCompanyDTO> activityByCompanyDTO = opportunityDTOService.getActivityByCompanyDTO(opportunity.getAccount());
-            result.add(opportunityMapper.mapToDTO(opportunity, contactByCompanyDTO, opportunityByCompanyDTO, activityByCompanyDTO));
+
+    @Override
+    public ResponseContactDTO findContactById(String id) {
+        Criteria<Lead> leadCriteria = new Criteria<>();
+        Criteria<Opportunity> opportunityCriteria = new Criteria<>();
+        this.setConditionsForAll(leadCriteria, opportunityCriteria);
+        Contact contact = contactRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
+        Account account = contact.getAccount();
+        if (account == null) {
+            System.out.println("account id null; contact id = " + id);
         }
+        leadCriteria.addCondition(new EqualCondition<>("contact", contact));
+        List<Lead> leads = leadRepository.findAll(leadCriteria);
+        opportunityCriteria.addCondition(new EqualCondition<>("owner", contact));
+        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
+        return responseMapper.mapToContactDTO(contact, leads, opportunities, account);
+    }
+
+    @Override
+    public ResponseOpportunityDTO findOpportunityById(String id) {
+        Criteria<Contact> contactCriteria = new Criteria<>();
+        Opportunity opportunity = opportunityRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
+        if (opportunity.getOwner() == null) {
+            return null;
+        }
+        Account account = opportunity.getOwner().getAccount(); // TODO OWNER OR CONTACT
+        contactCriteria.addCondition(new EqualCondition<>("account", account.getId()));
+        List<Contact> contacts = contactRepository.findAll(contactCriteria);
+        return responseMapper.mapToOpportunityDTO(opportunity, contacts, account);
+    }
+
+    @Override
+    public ResponseCompanyDTO findCompanyById(String id) {
+        Criteria<Contact> contactCriteria = new Criteria<>();
+        Criteria<Opportunity> opportunityCriteria = new Criteria<>();
+        Criteria<Lead> leadCriteria = new Criteria<>();
+        this.setConditionsForAll(leadCriteria, opportunityCriteria);
+        Account account = accountRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
+        contactCriteria.addCondition(new EqualCondition<>("account", account));
+        List<Contact> contacts = contactRepository.findAll(contactCriteria);
+        List<Lead> leads = contacts.stream()
+                .map(contact -> {
+                    Criteria<Lead> localLeadCriteria = new Criteria<>(leadCriteria);
+                    localLeadCriteria.addCondition(new EqualCondition<>("owner", contact));
+                    return leadRepository.findAll(localLeadCriteria);
+                })
+                .flatMap(List::stream).toList();
+        List<Opportunity> opportunities = contacts.stream()
+                .map(contact -> {
+                    Criteria<Opportunity> localOpportunityCriteria= new Criteria<>(opportunityCriteria);
+                    localOpportunityCriteria.addCondition(new EqualCondition<>("owner", contact));
+                    return opportunityRepository.findAll(localOpportunityCriteria);
+                })
+                .flatMap(List::stream)
+                .toList();
+//        opportunityCriteria.addCondition(new EqualCondition<>("accountid", account.getId()));
+//        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
+        return responseMapper.mapToCompanyDTO(account, leads, opportunities, contacts);
+    }
+
+    @Override
+    public List<ResponseLeadDTO> findLeads()  {
+        Criteria<Lead> leadCriteria = new Criteria<>();
+        this.setConditionsForAll(leadCriteria);
+        List<Lead> leads = leadRepository.findAll(leadCriteria);
+        List<ResponseLeadDTO> result = leads.stream().map(lead -> findLeadById(lead.getId())).toList();
         return result;
     }
 
-    private void setConditionsForAll(Criteria<?> criteria) {
-        criteria.addCondition(new GreaterThanCondition<>("createdOn", LocalDateTime.of(2024, 3, 1, 0, 0)));
+    @Override
+    public List<ResponseContactDTO> findContacts() {
+        Criteria<Contact> contactCriteria = new Criteria<>();
+        this.setConditionsForAll(contactCriteria);
+        List<Contact> contacts = contactRepository.findAll(contactCriteria);
+        List<ResponseContactDTO> result = contacts.stream()
+                .filter(Objects::nonNull)
+                .map(contact -> findContactById(contact.getId())).toList();
+        return result;
     }
+
+    @Override
+    public List<ResponseOpportunityDTO> findOpportunities() {
+        Criteria<Opportunity> opportunityCriteria = new Criteria<>();
+        this.setConditionsForAll(opportunityCriteria);
+        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
+        List<ResponseOpportunityDTO> result = opportunities.stream()
+                .map(opportunity -> findOpportunityById(opportunity.getId())).toList();
+        return result;
+    }
+
+    @Override
+    public List<ResponseCompanyDTO> findCompanies() {
+        Criteria<Account> accountCriteria = new Criteria<>();
+        this.setConditionsForAll(accountCriteria);
+        List<Account> accounts = accountRepository.findAll(accountCriteria);
+        List<ResponseCompanyDTO> result = accounts.stream()
+                .map(account -> findCompanyById(account.getId())).toList();
+        return result;
+    }
+
+    private void setConditionsForAll(Criteria<?> ... criteries) {
+        for (Criteria<?> criteria : criteries) {
+            criteria.addCondition(new GreaterThanCondition<>("createdOn", LocalDateTime.of(2024, 3, 1, 0, 0)));
+            criteria.addCondition(new IsNotNullCondition<>("id"));
+            criteria.unionConditionWithAnd();
+        }
+    }
+
 
 }

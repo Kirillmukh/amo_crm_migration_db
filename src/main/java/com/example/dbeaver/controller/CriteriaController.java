@@ -23,10 +23,6 @@ public class CriteriaController {
     public List<?> getContactByCompanyDTO() {
         return opportunityDTOService.getContactByCompanyDTO();
     }
-    @GetMapping("/activity")
-    public List<?> getActivityByCompanyDTO() {
-        return opportunityDTOService.getActivityByCompanyDTO();
-    }
 
     @GetMapping("/account")
     public List<?> get() {

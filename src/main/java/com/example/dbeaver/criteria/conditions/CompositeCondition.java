@@ -26,6 +26,10 @@ public class CompositeCondition<T, K extends Comparable<K>> implements Condition
         this.conditions = List.of(conditions);
         this.operator = operator;
     }
+    public CompositeCondition(LogicalOperator operator, List<Condition<T>> conditions) {
+        this.conditions = conditions;
+        this.operator = operator;
+    }
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {

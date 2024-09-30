@@ -1,8 +1,20 @@
 package com.example.dbeaver.facade;
 
-import com.example.dbeaver.dto.response.ResponseDTO;
+import com.example.dbeaver.dto.response.ResponseCompanyDTO;
+import com.example.dbeaver.dto.response.ResponseContactDTO;
+import com.example.dbeaver.dto.response.ResponseLeadDTO;
+import com.example.dbeaver.dto.response.ResponseOpportunityDTO;
+
+import java.util.List;
 
 public interface Facade {
 
-    ResponseDTO getResponse();
+    ResponseLeadDTO findLeadById(String id);
+    ResponseContactDTO findContactById(String id);
+    ResponseOpportunityDTO findOpportunityById(String id);
+    ResponseCompanyDTO findCompanyById(String id);
+    List<ResponseLeadDTO> findLeads();
+    List<ResponseContactDTO> findContacts();
+    List<ResponseOpportunityDTO> findOpportunities();
+    List<ResponseCompanyDTO> findCompanies();
 }

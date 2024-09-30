@@ -17,6 +17,7 @@ public class CriteriaHelper {
         if (criteria == null) return;
         cq.distinct(criteria.isDistinct());
 
+        criteria.unionConditionWithAnd();
         List<Predicate> predicateList = new ArrayList<>(criteria.getConditions().size());
         for (Condition<T> condition : criteria.getConditions()) {
             predicateList.add(condition.toPredicate(root, cb));

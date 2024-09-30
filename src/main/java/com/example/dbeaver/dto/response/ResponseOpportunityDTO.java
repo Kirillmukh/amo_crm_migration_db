@@ -1,0 +1,21 @@
+package com.example.dbeaver.dto.response;
+
+import com.example.dbeaver.dto.AccountDTO;
+import com.example.dbeaver.dto.ContactDTO;
+import com.example.dbeaver.dto.OpportunityDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResponseOpportunityDTO {
+    private OpportunityDTO opportunity;
+    private List<ContactDTO> contacts;
+    private AccountDTO company;
+}

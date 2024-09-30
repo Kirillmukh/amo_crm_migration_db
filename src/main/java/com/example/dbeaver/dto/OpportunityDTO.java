@@ -1,14 +1,10 @@
 package com.example.dbeaver.dto;
 
-import com.example.dbeaver.dto.util.ActivityByCompanyDTO;
-import com.example.dbeaver.dto.util.ContactByCompanyDTO;
-import com.example.dbeaver.dto.util.OpportunityByCompanyDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -24,7 +20,4 @@ public class OpportunityDTO {
     private LocalDateTime createdOn; // or dueDate
     private String description;
     private ContactDTO contactInOpportunity; // contactId (Contact.java)
-    private List<OpportunityByCompanyDTO> sellsByCompanyDTO;
-    private List<ActivityByCompanyDTO> activitiesByCompanyDTO;
-    private List<ContactByCompanyDTO> contactsByCompanyDTO;
 }

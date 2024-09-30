@@ -1,10 +1,7 @@
 package com.example.dbeaver.dto;
 
-import com.example.dbeaver.dto.util.OpportunityByAccountDTO;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 @Getter
 @Setter
 public class AccountDTO {
@@ -18,6 +15,5 @@ public class AccountDTO {
     private byte usrCompanyUseEDM;
     private String usrArchiveEvents;
     private String usrEventsOfRival;
-    private List<OpportunityByAccountDTO> opportunitiesByAccountDTO;
     private String usrPrimKontr;
 }

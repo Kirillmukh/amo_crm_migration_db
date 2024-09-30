@@ -43,13 +43,6 @@ public class OpportunityDTOService {
                 .map(opportunityMapper::mapToDTO).toList();
     }
 
-    public List<ActivityByCompanyDTO> getActivityByCompanyDTO() {
-        Criteria<Activity> criteria = new Criteria<>();
-        criteria.addCondition(new GreaterThanCondition<>("createdOn", LocalDateTime.of(2024, 3, 1, 0, 0)));
-        return this.criteriaRepository.getActivitiesByCompany(criteria).stream()
-                .map(activityMapper::mapToDTO).toList();
-    }
-
     public List<ContactByCompanyDTO> getContactByCompanyDTO(Account account) {
         Criteria<Contact> criteria = new Criteria<>();
         if (account == null) {
@@ -59,7 +52,6 @@ public class OpportunityDTOService {
         return this.criteriaRepository.getContactsByCompany(criteria).stream()
                 .map(contactMapper::mapToDTO).toList();
     }
-
     public List<OpportunityByCompanyDTO> getOpportunityByCompanyDTO(Account account) {
         Criteria<Opportunity> criteria = new Criteria<>();
         if (account == null) {
@@ -69,15 +61,4 @@ public class OpportunityDTOService {
         return this.criteriaRepository.getOpportunitiesByCompany(criteria).stream()
                 .map(opportunityMapper::mapToDTO).toList();
     }
-
-    public List<ActivityByCompanyDTO> getActivityByCompanyDTO(Account account) {
-        Criteria<Activity> criteria = new Criteria<>();
-        if (account == null) {
-            return List.of();
-        }
-        criteria.addCondition(new EqualCondition<>("account", account));
-        return this.criteriaRepository.getActivitiesByCompany(criteria).stream()
-                .map(activityMapper::mapToDTO).toList();
-    }
-
 }

@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CriteriaRepository<T, K> {
@@ -30,7 +31,7 @@ public class CriteriaRepository<T, K> {
         return query.getResultList();
     }
 
-    public List<T> findById(K id, Criteria<T> criteria) {
+    public Optional<T> findById(K id, Criteria<T> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         Root<T> root = cq.from(entityClass);
@@ -41,6 +42,6 @@ public class CriteriaRepository<T, K> {
         TypedQuery<T> query = em.createQuery(cq);
         CriteriaHelper.configureTypedQuery(query, criteria);
 
-        return query.getResultList();
+        return Optional.ofNullable(query.getSingleResult());
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/contact")
+@RequestMapping("/c")
 @RequiredArgsConstructor
 public class ContactController {
     private final ContactRepository repository;

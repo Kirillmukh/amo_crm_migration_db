@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lead")
+@RequestMapping("/l")
 @RequiredArgsConstructor
 public class LeadController {
     private final LeadRepository repository;
-    @GetMapping
-    public List<?> findAll() {
-        return repository.findAll();
-    }
+//    @GetMapping
+//    public List<?> findAll() {
+//        return repository.findAll();
+//    }
 }
