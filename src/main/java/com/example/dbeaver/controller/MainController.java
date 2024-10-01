@@ -9,7 +9,6 @@ import com.example.dbeaver.facade.Facade;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,8 +75,9 @@ public class MainController {
         return Response.ok(model).status(200).build();
     }
 //    @GetMapping("/entity")
-//    public ResponseEntity<List<ResponseOpportunityDTO>> findOpportunityEntities() {
-//        return ResponseEntity.ok(facade.findOpportunities());
+//    public ResponseEntity<List<ResponseOpportunityDTO>> findOpportunityEntities(@RequestParam(name = "limit", defaultValue = "500", required = false) int limit,
+//                                  @RequestParam(name = "offset", defaultValue = "0", required = false) int offset) {
+//        return ResponseEntity.ok(facade.findOpportunities(limit, offset));
 //    }
 
     @ExceptionHandler(WrongIdException.class)
