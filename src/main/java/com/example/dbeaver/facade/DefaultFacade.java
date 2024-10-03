@@ -22,7 +22,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,9 +38,9 @@ public class DefaultFacade implements Facade {
     private final ResponseMapper responseMapper;
 
     @Override
-    public ResponseLeadDTO findLeadById(String id) {
+    public ResponseLeadDTO findLeadById(String id, LocalDate date) {
         Criteria<Contact> contactCriteria = new Criteria<>();
-        this.setConditionsForAll(contactCriteria);
+        this.setConditionsForAll(date, contactCriteria);
         Lead lead = leadRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
         if (lead.getContact() == null) {
             return responseMapper.mapToLeadDTO(lead, null, null);
@@ -55,10 +57,10 @@ public class DefaultFacade implements Facade {
     }
 
     @Override
-    public ResponseContactDTO findContactById(String id) {
+    public ResponseContactDTO findContactById(String id, LocalDate date) {
         Criteria<Lead> leadCriteria = new Criteria<>();
         Criteria<Opportunity> opportunityCriteria = new Criteria<>();
-        this.setConditionsForAll(leadCriteria, opportunityCriteria);
+        this.setConditionsForAll(date, leadCriteria, opportunityCriteria);
         Contact contact = contactRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
         Account account = contact.getAccount();
         leadCriteria.addCondition(new EqualCondition<>("contact", contact)); // checked
@@ -69,7 +71,7 @@ public class DefaultFacade implements Facade {
     }
 
     @Override
-    public ResponseOpportunityDTO findOpportunityById(String id) {
+    public ResponseOpportunityDTO findOpportunityById(String id, LocalDate date) {
         Criteria<Contact> contactCriteria = new Criteria<>();
         Opportunity opportunity = opportunityRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
         Account account = opportunity.getOwner().getAccount();
@@ -84,10 +86,10 @@ public class DefaultFacade implements Facade {
     }
 
     @Override
-    public ResponseCompanyDTO findCompanyById(String id) {
+    public ResponseCompanyDTO findCompanyById(String id, LocalDate date) {
         Criteria<Opportunity> opportunityCriteria = new Criteria<>();
         Criteria<Lead> leadCriteria = new Criteria<>();
-        this.setConditionsForAll(leadCriteria, opportunityCriteria);
+        this.setConditionsForAll(date, leadCriteria, opportunityCriteria);
         Account account = accountRepository.findById(id, new Criteria<>()).orElseThrow(WrongIdException::new);
         Criteria<Contact> contactCriteria = new Criteria<>();
         contactCriteria.addCondition(new EqualCondition<>("account", account));
@@ -114,56 +116,56 @@ public class DefaultFacade implements Facade {
         return responseMapper.mapToCompanyDTO(account, leads, opportunities, contacts);
     }
 
-    private void setConditionsForAll(Criteria<?>... criterias) {
+    private void setConditionsForAll(LocalDate date, Criteria<?>... criterias) {
         for (Criteria<?> criteria : criterias) {
-            criteria.addCondition(new GreaterThanCondition<>("createdOn", LocalDateTime.of(2024, 3, 1, 0, 0)));
-            criteria.addCondition(new IsNotNullCondition<>("id"));
-            criteria.unionConditionWithAnd();
+            criteria.addCondition(new GreaterThanCondition<>("createdOn", LocalDateTime.of(date, LocalTime.of(0, 0))));
+//            criteria.addCondition(new IsNotNullCondition<>("id"));
+//            criteria.unionConditionWithAnd();
         }
     }
 
     @Override
-    public List<ResponseLeadDTO> findLeads(int limit, int offset) {
+    public List<ResponseLeadDTO> findLeads(int limit, int offset, LocalDate localDate) {
         Criteria<Lead> leadCriteria = new Criteria<>();
         leadCriteria.setLimit(limit);
         leadCriteria.setOffset(offset);
-        this.setConditionsForAll(leadCriteria);
+        this.setConditionsForAll(localDate, leadCriteria);
         leadCriteria.addCondition(new IsNotNullCondition<>("id"));
         List<ResponseLeadDTO> result = leadRepository.findAll(leadCriteria).parallelStream()
-                .map(lead -> findLeadById(lead.getId())).toList();
+                .map(lead -> findLeadById(lead.getId(), localDate)).toList();
         return result;
     }
 
     @Override
-    public List<ResponseContactDTO> findContacts(int limit, int offset) {
+    public List<ResponseContactDTO> findContacts(int limit, int offset, LocalDate localDate) {
         Criteria<Contact> contactCriteria = new Criteria<>();
         contactCriteria.setLimit(limit);
         contactCriteria.setOffset(offset);
-        this.setConditionsForAll(contactCriteria);
+        this.setConditionsForAll(localDate, contactCriteria);
         List<ResponseContactDTO> result = contactRepository.findAll(contactCriteria).parallelStream()
-                .map(contact -> findContactById(contact.getId())).toList();
+                .map(contact -> findContactById(contact.getId(), localDate)).toList();
         return result;
     }
 
     @Override
-    public List<ResponseOpportunityDTO> findOpportunities(int limit, int offset) {
+    public List<ResponseOpportunityDTO> findOpportunities(int limit, int offset, LocalDate localDate) {
         Criteria<Opportunity> opportunityCriteria = new Criteria<>();
         opportunityCriteria.setLimit(limit);
         opportunityCriteria.setOffset(offset);
-        this.setConditionsForAll(opportunityCriteria);
+        this.setConditionsForAll(localDate, opportunityCriteria);
         List<ResponseOpportunityDTO> result = opportunityRepository.findAll(opportunityCriteria).parallelStream()
-                .map(opportunity -> findOpportunityById(opportunity.getId())).toList();
+                .map(opportunity -> findOpportunityById(opportunity.getId(), localDate)).toList();
         return result;
     }
 
     @Override
-    public List<ResponseCompanyDTO> findCompanies(int limit, int offset) {
+    public List<ResponseCompanyDTO> findCompanies(int limit, int offset, LocalDate localDate) {
         Criteria<Account> accountCriteria = new Criteria<>();
         accountCriteria.setLimit(limit);
         accountCriteria.setOffset(offset);
-        this.setConditionsForAll(accountCriteria);
+        this.setConditionsForAll(localDate, accountCriteria);
         List<ResponseCompanyDTO> result = accountRepository.findAll(accountCriteria).parallelStream()
-                .map(account -> findCompanyById(account.getId())).toList();
+                .map(account -> findCompanyById(account.getId(), localDate)).toList();
         return result;
     }
 }
