@@ -19,7 +19,7 @@ import com.example.dbeaver.repository.ContactCriteriaRepository;
 import com.example.dbeaver.repository.LeadCriteriaRepository;
 import com.example.dbeaver.repository.OpportunityCriteriaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -30,6 +30,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultFacade implements Facade {
     private final AccountCriteriaRepository accountRepository;
     private final ContactCriteriaRepository contactRepository;
@@ -48,7 +49,7 @@ public class DefaultFacade implements Facade {
         Account account = lead.getContact().getAccount(); // TODO OWNER OR CONTACT // checked only contact
         List<Contact> contacts = List.of(lead.getContact());
         if (account == null) {
-            System.out.println("account id null; contact id = " + lead.getContact().getId());
+            log.info("account id null; contact id = " + lead.getContact().getId());
         } else {
             contactCriteria.addCondition(new EqualCondition<>("account", account));
             contacts = contactRepository.findAll(contactCriteria);
@@ -77,7 +78,7 @@ public class DefaultFacade implements Facade {
         Account account = opportunity.getOwner().getAccount();
         List<Contact> contacts = List.of(opportunity.getOwner());
         if (account == null) {
-            System.out.println("account id null; contact id = " + id);
+            log.info("account id null; contact id = " + id);
         } else {
             contactCriteria.addCondition(new EqualCondition<>("account", account));
             contacts = contactRepository.findAll(contactCriteria);
@@ -102,17 +103,8 @@ public class DefaultFacade implements Facade {
                     return leadRepository.findAll(localLeadCriteria);
                 })
                 .flatMap(List::parallelStream).toList();
-        List<Opportunity> opportunities = contacts.parallelStream()// all nulls because sql
-                .filter(Objects::nonNull)
-                .map(contact -> {
-                    Criteria<Opportunity> localOpportunityCriteria = new Criteria<>(opportunityCriteria); // opportunities after 01.03.2024 // all null
-                    localOpportunityCriteria.addCondition(new EqualCondition<>("owner", contact)); // checked owner
-                    return opportunityRepository.findAll(localOpportunityCriteria);
-                })
-                .flatMap(List::parallelStream)
-                .toList();
-//        opportunityCriteria.addCondition(new EqualCondition<>("accountid", account.getId()));
-//        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
+        opportunityCriteria.addCondition(new EqualCondition<>("account", account));
+        List<Opportunity> opportunities = opportunityRepository.findAll(opportunityCriteria);
         return responseMapper.mapToCompanyDTO(account, leads, opportunities, contacts);
     }
 

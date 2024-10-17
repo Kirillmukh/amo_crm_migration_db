@@ -2,13 +2,9 @@ package com.example.dbeaver.mapper;
 
 import com.example.dbeaver.dto.ContactDTO;
 import com.example.dbeaver.dto.OpportunityDTO;
-import com.example.dbeaver.dto.util.ContactByCompanyDTO;
-import com.example.dbeaver.dto.util.OpportunityByCompanyDTO;
 import com.example.dbeaver.entity.opportunity.Opportunity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
