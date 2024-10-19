@@ -33,9 +33,9 @@ public class Account {
     @JoinColumn(name = "industryid")
     private AccountIndustry accountIndustry;
     @Column(name = "usrcompanyuseedm")
-    private byte usrCompanyUseEDM;
-    @Column(name = "usrarchiveevents")
-    private String usrArchiveEvents;
+    private boolean usrCompanyUseEDM;
+    @Column(name = "usroldevents")
+    private String usrOldEvents;
     @Column(name = "usreventsofrival")
     private String usrEventsOfRival;
     @Column(name = "usrprimkontr")

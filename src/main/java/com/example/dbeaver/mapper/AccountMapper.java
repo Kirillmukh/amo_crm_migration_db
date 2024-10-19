@@ -17,8 +17,8 @@ public class AccountMapper {
         dto.setPhone(account.getPhone());
         dto.setCategory(account.getAccountCategory().getName());
         dto.setIndustry(account.getAccountIndustry().getName());
-        dto.setUsrCompanyUseEDM(account.getUsrCompanyUseEDM());
-        dto.setUsrArchiveEvents(account.getUsrArchiveEvents());
+        dto.setUsrCompanyUseEDM(account.isUsrCompanyUseEDM());
+        dto.setUsrOldEvents(account.getUsrOldEvents());
         dto.setUsrEventsOfRival(account.getUsrEventsOfRival());
         dto.setUsrPrimKontr(account.getUsrPrimKontr());
         return dto;
