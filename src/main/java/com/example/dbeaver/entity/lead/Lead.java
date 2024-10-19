@@ -43,7 +43,7 @@ public class Lead {
     @JoinColumn(name = "usrlookupid")
     private UsrPaymentType usrPaymentType;
     @Column(name = "usrsprim")
-    private String usrsPrim;
+    private String usrPrim;
     @ManyToOne
     @JoinColumn(name = "usrmerupid")
     private Event event;

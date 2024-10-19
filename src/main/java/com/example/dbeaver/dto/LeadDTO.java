@@ -29,7 +29,7 @@ public class LeadDTO {
     private int usrConfId;
     private String leadMedium; // LeadMediumId -> name
     private String leadSource; // LeadSourceId -> name
-    private String usrYaMetrikaClientID;
+    private String usrYaMetrikaClientId;
     private String bpmRef;
     private String landing; // WebFormId (GeneratedWebForm.java) -> name
     private String campaign; // CampaignId -> name
