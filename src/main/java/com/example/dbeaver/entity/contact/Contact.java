@@ -48,7 +48,7 @@ public class Contact {
     @Column(name = "usreventsofrival")
     private String usrEventsOfRival;
     @Column(name = "usrdisccard")
-    private int usrDiscCard;
+    private String usrDiscCard;
     @ManyToOne
     @JoinColumn(name = "usrmoderationid")
     private UsrModeration usrModeration;
