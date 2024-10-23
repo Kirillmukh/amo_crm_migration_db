@@ -11,5 +11,7 @@ public interface AccountMapper {
     @Mapping(target = "type", source = "accountType.name")
     @Mapping(target = "category", source = "accountCategory.name")
     @Mapping(target = "industry", source = "accountIndustry.name")
+    @Mapping(target = "segment", source = "usrSegment.name")
+    @Mapping(target = "moderation", source = "moderation.name")
     AccountDTO mapToDTO(Account account);
 }

@@ -1,5 +1,6 @@
 package com.example.dbeaver.entity.account;
 
+import com.example.dbeaver.entity.UsrModeration;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,4 +41,10 @@ public class Account {
     private String usrEventsOfRival;
     @Column(name = "usrprimkontr")
     private String usrPrimKontr;
+    @OneToOne
+    @JoinColumn(name = "usrsegmentid")
+    private UsrSegment usrSegment;
+    @OneToOne
+    @JoinColumn(name = "usrmodkontrid")
+    private UsrModeration moderation;
 }

@@ -1,4 +1,4 @@
-package com.example.dbeaver.entity.contact;
+package com.example.dbeaver.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

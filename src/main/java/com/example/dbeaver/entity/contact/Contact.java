@@ -1,5 +1,6 @@
 package com.example.dbeaver.entity.contact;
 
+import com.example.dbeaver.entity.UsrModeration;
 import com.example.dbeaver.entity.account.Account;
 import jakarta.persistence.*;
 import lombok.Getter;
