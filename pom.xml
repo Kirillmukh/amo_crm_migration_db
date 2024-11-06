@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>dbeaver</artifactId>
+    <artifactId>interforum_compare_events</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dbeaver</name>
     <description>dbeaver</description>
