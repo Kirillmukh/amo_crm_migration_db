@@ -5,6 +5,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AccountDTO {
+    private String id;
     private String name;
     private String alternativeName;
     private String type; // TypeId -> name

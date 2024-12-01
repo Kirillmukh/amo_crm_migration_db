@@ -7,14 +7,15 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
 public class CriteriaHelper {
 
-    public static <T> void configureCriteriaQuery(Root<T> root, CriteriaBuilder cb, CriteriaQuery<T> cq, Criteria<T> criteria) {
+    public <T> void configureCriteriaQuery(Root<T> root, CriteriaBuilder cb, CriteriaQuery<?> cq, Criteria<T> criteria) {
         if (criteria == null) return;
         cq.distinct(criteria.isDistinct());
 
@@ -35,7 +36,7 @@ public class CriteriaHelper {
             cq.orderBy(orderList.toArray(new jakarta.persistence.criteria.Order[0]));
         }
     }
-    public static <T> void configureTypedQuery(TypedQuery<T> query, Criteria<T> criteria) {
+    public <T> void configureTypedQuery(TypedQuery<T> query, Criteria<T> criteria) {
         if (criteria == null) return;
         if (criteria.getLimit() > 0) {
             query.setMaxResults(criteria.getLimit());

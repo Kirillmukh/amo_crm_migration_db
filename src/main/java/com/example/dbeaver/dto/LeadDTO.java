@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class LeadDTO {
+    private String id;
     private String type; // leadTypeId (LeadType.java) -> name
     private String registerMethod; // RegisterMethodId (LeadRegisterMethod.java) -> name
     private LocalDateTime createdOn;

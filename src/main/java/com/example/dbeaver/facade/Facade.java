@@ -18,4 +18,8 @@ public interface Facade {
     List<ResponseContactDTO> findContacts(int limit, int offset, LocalDate date);
     List<ResponseOpportunityDTO> findOpportunities(int limit, int offset, LocalDate date);
     List<ResponseCompanyDTO> findCompanies(int limit, int offset, LocalDate date);
+    long countAllLeads(LocalDate localDate);
+    long countAllContacts(LocalDate localDate);
+    long countAllOpportunities(LocalDate localDate);
+    long countAllCompanies(LocalDate localDate);
 }

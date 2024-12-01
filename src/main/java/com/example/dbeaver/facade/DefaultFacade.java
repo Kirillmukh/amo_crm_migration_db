@@ -160,4 +160,28 @@ public class DefaultFacade implements Facade {
                 .map(account -> findCompanyById(account.getId(), localDate)).toList();
         return result;
     }
+    @Override
+    public long countAllLeads(LocalDate localDate) {
+        Criteria<Lead> criteria = new Criteria<>();
+        this.setConditionsForAll(localDate, criteria);
+        return leadRepository.countAll(criteria);
+    }
+    @Override
+    public long countAllCompanies(LocalDate localDate) {
+        Criteria<Account> criteria = new Criteria<>();
+        this.setConditionsForAll(localDate, criteria);
+        return accountRepository.countAll(criteria);
+    }
+    @Override
+    public long countAllContacts(LocalDate localDate) {
+        Criteria<Contact> criteria = new Criteria<>();
+        this.setConditionsForAll(localDate, criteria);
+        return contactRepository.countAll(criteria);
+    }
+    @Override
+    public long countAllOpportunities(LocalDate localDate) {
+        Criteria<Opportunity> criteria = new Criteria<>();
+        this.setConditionsForAll(localDate, criteria);
+        return opportunityRepository.countAll(criteria);
+    }
 }

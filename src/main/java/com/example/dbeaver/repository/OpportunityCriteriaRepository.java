@@ -18,22 +18,23 @@ import java.util.List;
 public class OpportunityCriteriaRepository extends CriteriaRepository<Opportunity, String> {
     @PersistenceContext
     private EntityManager em;
+    private final CriteriaHelper criteriaHelper;
 
-    public OpportunityCriteriaRepository(Class<Opportunity> entityClass) {
+    public OpportunityCriteriaRepository(Class<Opportunity> entityClass, CriteriaHelper criteriaHelper) {
         super(entityClass);
+        this.criteriaHelper = criteriaHelper;
     }
-
     public List<Contact> getContactsByCompany(Criteria<Contact> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Contact> cq = cb.createQuery(Contact.class);
         Root<Contact> root = cq.from(Contact.class);
         root.join("account");
 
-        CriteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
+        criteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
 
         TypedQuery<Contact> query = em.createQuery(cq);
 
-        CriteriaHelper.configureTypedQuery(query, criteria);
+        criteriaHelper.configureTypedQuery(query, criteria);
 
         return query.getResultList();
     }
@@ -45,11 +46,11 @@ public class OpportunityCriteriaRepository extends CriteriaRepository<Opportunit
         root.join("account", JoinType.INNER);
         root.join("opportunityStage", JoinType.INNER);
 
-        CriteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
+        criteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
 
         TypedQuery<Opportunity> query = em.createQuery(cq);
 
-        CriteriaHelper.configureTypedQuery(query, criteria);
+        criteriaHelper.configureTypedQuery(query, criteria);
 
         return query.getResultList();
     }
@@ -61,11 +62,11 @@ public class OpportunityCriteriaRepository extends CriteriaRepository<Opportunit
         root.join("account");
         root.join("activityStatus");
 
-        CriteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
+        criteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
 
         TypedQuery<Activity> query = em.createQuery(cq);
 
-        CriteriaHelper.configureTypedQuery(query, criteria);
+        criteriaHelper.configureTypedQuery(query, criteria);
         return query.getResultList();
     }
 }

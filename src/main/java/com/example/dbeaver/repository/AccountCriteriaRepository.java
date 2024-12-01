@@ -16,11 +16,11 @@ import java.util.List;
 public class AccountCriteriaRepository extends CriteriaRepository<Account, String> {
     @PersistenceContext
     private EntityManager em;
-
-    public AccountCriteriaRepository(Class<Account> entityClass) {
+    private final CriteriaHelper criteriaHelper;
+    public AccountCriteriaRepository(Class<Account> entityClass, CriteriaHelper criteriaHelper) {
         super(entityClass);
+        this.criteriaHelper = criteriaHelper;
     }
-
     public List<Opportunity> getOpportunityByAccount(Criteria<Opportunity> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Opportunity> cq = cb.createQuery(Opportunity.class);
@@ -29,11 +29,11 @@ public class AccountCriteriaRepository extends CriteriaRepository<Account, Strin
         root.join("opportunityStage");
         root.join("event");
 
-        CriteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
+        criteriaHelper.configureCriteriaQuery(root, cb, cq, criteria);
 
         TypedQuery<Opportunity> query = em.createQuery(cq);
 
-        CriteriaHelper.configureTypedQuery(query, criteria);
+        criteriaHelper.configureTypedQuery(query, criteria);
 
         return query.getResultList();
     }
