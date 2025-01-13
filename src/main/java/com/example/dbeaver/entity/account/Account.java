@@ -37,8 +37,6 @@ public class Account {
     private boolean usrCompanyUseEDM;
     @Column(name = "usroldevents")
     private String usrOldEvents;
-    @Column(name = "usreventsofrival")
-    private String usrEventsOfRival;
     @Column(name = "usrprimkontr")
     private String usrPrimKontr;
     @OneToOne

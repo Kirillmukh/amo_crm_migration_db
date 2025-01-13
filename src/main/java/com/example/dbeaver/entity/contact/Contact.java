@@ -46,8 +46,6 @@ public class Contact {
     private Department department;
     @Column(name = "usroldevents2")
     private String usrOldEvents;
-    @Column(name = "usreventsofrival")
-    private String usrEventsOfRival;
     @Column(name = "usrdisccard")
     private String usrDiscCard;
     @ManyToOne

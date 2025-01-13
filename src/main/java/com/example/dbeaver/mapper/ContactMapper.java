@@ -16,7 +16,6 @@ public interface ContactMapper {
     @Mapping(target = "io", source = "usrIO")
     @Mapping(target = "role", source = "contactDecisionRole.name")
     @Mapping(target = "department", source = "department.name")
-    @Mapping(target = "usrOldEventsOfRivals", source = "usrOldEvents")
     @Mapping(target = "moderation", source = "usrModeration.name")
     ContactDTO mapToDTO(Contact contact);
     List<ContactDTO> mapToDTO(List<Contact> contacts);
