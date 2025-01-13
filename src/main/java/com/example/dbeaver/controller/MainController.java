@@ -1,9 +1,6 @@
 package com.example.dbeaver.controller;
 
-import com.example.dbeaver.dto.response.ResponseCompanyDTO;
-import com.example.dbeaver.dto.response.ResponseContactDTO;
-import com.example.dbeaver.dto.response.ResponseLeadDTO;
-import com.example.dbeaver.dto.response.ResponseOpportunityDTO;
+import com.example.dbeaver.dto.response.*;
 import com.example.dbeaver.exception.WrongIdException;
 import com.example.dbeaver.facade.Facade;
 import jakarta.ws.rs.core.Response;
@@ -118,6 +115,32 @@ public class MainController {
             links.add(linkTo(methodOn(controllerClass).opportunities(limit, offset + limit, date)).withRel("next"));
         }
         CollectionModel<ResponseOpportunityDTO> model = CollectionModel.of(result, links);
+        return Response.ok(model).status(200).build();
+    }
+    @GetMapping("/new-companies")
+    public Response companyWithContacts(@RequestParam(name = "limit", defaultValue = "500", required = false) int limit,
+                                        @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
+                                        @RequestParam(name = "date", defaultValue = "01-03-2024", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
+        List<ResponseCompanyWithContactsDTO> result = facade.findCompaniesWithContacts(limit, offset, date);
+        List<Link> links = new ArrayList<>();
+        links.add(linkTo(methodOn(controllerClass).companyWithContacts(limit, Math.max(0, offset - limit), date)).withRel("prevOrFirst"));
+        if (facade.countAllCompanies(date) >= limit) {
+            links.add(linkTo(methodOn(controllerClass).companyWithContacts(limit, offset + limit, date)).withRel("next"));
+        }
+        CollectionModel<ResponseCompanyWithContactsDTO> model = CollectionModel.of(result, links);
+        return Response.ok(model).status(200).build();
+    }
+    @GetMapping("/new-contacts")
+    public Response contactsWithoutCompany(@RequestParam(name = "limit", defaultValue = "500", required = false) int limit,
+                                             @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
+                                             @RequestParam(name = "date", defaultValue = "01-03-2024", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
+        List<ResponseContactWithoutCompanyDTO> result = facade.findContactsWithoutCompany(limit, offset, date);
+        List<Link> links = new ArrayList<>();
+        links.add(linkTo(methodOn(controllerClass).contactsWithoutCompany(limit, Math.max(0, offset - limit), date)).withRel("prevOrFirst"));
+        if (facade.countContactsWithoutCompanies(date) >= limit) {
+            links.add(linkTo(methodOn(controllerClass).contactsWithoutCompany(limit, limit + offset, date)).withRel("next"));
+        }
+        CollectionModel<ResponseContactWithoutCompanyDTO> model = CollectionModel.of(result, links);
         return Response.ok(model).status(200).build();
     }
     @ExceptionHandler(WrongIdException.class)

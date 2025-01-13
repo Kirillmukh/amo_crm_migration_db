@@ -1,9 +1,6 @@
 package com.example.dbeaver.facade;
 
-import com.example.dbeaver.dto.response.ResponseCompanyDTO;
-import com.example.dbeaver.dto.response.ResponseContactDTO;
-import com.example.dbeaver.dto.response.ResponseLeadDTO;
-import com.example.dbeaver.dto.response.ResponseOpportunityDTO;
+import com.example.dbeaver.dto.response.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,4 +19,8 @@ public interface Facade {
     long countAllContacts(LocalDate localDate);
     long countAllOpportunities(LocalDate localDate);
     long countAllCompanies(LocalDate localDate);
+
+    List<ResponseCompanyWithContactsDTO> findCompaniesWithContacts(int limit, int offset, LocalDate date);
+    List<ResponseContactWithoutCompanyDTO> findContactsWithoutCompany(int limit, int offset, LocalDate date);
+    long countContactsWithoutCompanies(LocalDate date);
 }

@@ -9,9 +9,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +23,7 @@ public abstract class CriteriaRepository<T, K> {
     protected final Class<T> entityClass;
     @Autowired
     private CriteriaHelper criteriaHelper;
+    @Transactional(readOnly = true)
     public List<T> findAll(Criteria<T> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
@@ -35,6 +36,7 @@ public abstract class CriteriaRepository<T, K> {
         return query.getResultList();
     }
 
+    @Transactional(readOnly = true)
     public Optional<T> findById(K id, Criteria<T> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
@@ -48,6 +50,7 @@ public abstract class CriteriaRepository<T, K> {
 
         return Optional.ofNullable(query.getSingleResult());
     }
+    @Transactional(readOnly = true)
     public long countAll(Criteria<T> criteria) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);

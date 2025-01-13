@@ -1,9 +1,6 @@
 package com.example.dbeaver.mapper.response;
 
-import com.example.dbeaver.dto.response.ResponseCompanyDTO;
-import com.example.dbeaver.dto.response.ResponseContactDTO;
-import com.example.dbeaver.dto.response.ResponseLeadDTO;
-import com.example.dbeaver.dto.response.ResponseOpportunityDTO;
+import com.example.dbeaver.dto.response.*;
 import com.example.dbeaver.entity.account.Account;
 import com.example.dbeaver.entity.contact.Contact;
 import com.example.dbeaver.entity.lead.Lead;
@@ -63,5 +60,14 @@ public class ResponseMapper {
         responseCompanyDTO.setOpportunities(opportunities.parallelStream().map(opportunityMapper::mapToDTO).toList());
         responseCompanyDTO.setContacts(contacts.parallelStream().map(contactMapper::mapToDTO).toList());
         return responseCompanyDTO;
+    }
+    public ResponseCompanyWithContactsDTO mapToCompanyWithContactsDTO(Account account, List<Contact> contacts) {
+        ResponseCompanyWithContactsDTO responseCompanyWithContactsDTO = new ResponseCompanyWithContactsDTO();
+        responseCompanyWithContactsDTO.setCompany(accountMapper.mapToDTO(account));
+        responseCompanyWithContactsDTO.setContacts(contactMapper.mapToDTO(contacts));
+        return responseCompanyWithContactsDTO;
+    }
+    public ResponseContactWithoutCompanyDTO mapToContactWithoutCompanyDTO(Contact contact) {
+        return new ResponseContactWithoutCompanyDTO(contactMapper.mapToDTO(contact));
     }
 }

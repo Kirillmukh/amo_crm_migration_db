@@ -22,7 +22,7 @@ public class CriteriaConfiguration {
     }
     @Bean
     public ContactCriteriaRepository criteriaRepository() {
-        return new ContactCriteriaRepository(Contact.class);
+        return new ContactCriteriaRepository(Contact.class, criteriaHelper);
     }
     @Bean
     public LeadCriteriaRepository leadCriteriaRepository() {

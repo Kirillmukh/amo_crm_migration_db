@@ -4,7 +4,7 @@ import com.example.dbeaver.criteria.Condition;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Path;
 
 public class GreaterThanCondition<T, V extends Comparable<V>> implements Condition<T> {
     private final String fieldName;
@@ -16,7 +16,7 @@ public class GreaterThanCondition<T, V extends Comparable<V>> implements Conditi
     }
 
     @Override
-    public Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
+    public Predicate toPredicate(Path<T> root, CriteriaBuilder cb) {
         return cb.greaterThan(root.get(fieldName), value);
     }
 }

@@ -2,12 +2,12 @@ package com.example.dbeaver.criteria.conditions;
 
 
 import com.example.dbeaver.criteria.Condition;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 @Getter
@@ -32,7 +32,7 @@ public class CompositeCondition<T, K extends Comparable<K>> implements Condition
     }
 
     @Override
-    public  Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
+    public  Predicate toPredicate(Path<T> root, CriteriaBuilder cb) {
         List<Predicate> predicates = conditions.stream()
                 .map(condition -> condition.toPredicate(root, cb))
                 .toList();

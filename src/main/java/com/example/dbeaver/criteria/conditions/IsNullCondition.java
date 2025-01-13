@@ -4,7 +4,7 @@ import com.example.dbeaver.criteria.Condition;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Path;
 
 public class IsNullCondition<T> implements Condition<T> {
     private String fieldName;
@@ -14,7 +14,7 @@ public class IsNullCondition<T> implements Condition<T> {
     }
 
     @Override
-    public Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
+    public Predicate toPredicate(Path<T> root, CriteriaBuilder cb) {
         return cb.isNull(root.get(fieldName));
     }
 }

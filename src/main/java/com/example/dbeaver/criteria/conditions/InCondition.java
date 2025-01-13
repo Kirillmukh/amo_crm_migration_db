@@ -4,7 +4,7 @@ import com.example.dbeaver.criteria.Condition;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Path;
 import java.util.Collection;
 
 public class InCondition<T> implements Condition<T> {
@@ -17,7 +17,7 @@ public class InCondition<T> implements Condition<T> {
     }
 
     @Override
-    public Predicate toPredicate(Root<T> root, CriteriaBuilder cb) {
+    public Predicate toPredicate(Path<T> root, CriteriaBuilder cb) {
         return root.get(fieldName).in(values);
     }
 }
