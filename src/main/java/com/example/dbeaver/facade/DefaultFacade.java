@@ -1,8 +1,10 @@
 package com.example.dbeaver.facade;
 
-import com.example.dbeaver.criteria.Condition;
 import com.example.dbeaver.criteria.Criteria;
-import com.example.dbeaver.criteria.conditions.*;
+import com.example.dbeaver.criteria.conditions.EqualCondition;
+import com.example.dbeaver.criteria.conditions.GreaterThanCondition;
+import com.example.dbeaver.criteria.conditions.IsNotNullCondition;
+import com.example.dbeaver.criteria.conditions.IsNullCondition;
 import com.example.dbeaver.dto.response.*;
 import com.example.dbeaver.entity.account.Account;
 import com.example.dbeaver.entity.contact.Contact;
@@ -17,15 +19,12 @@ import com.example.dbeaver.repository.OpportunityCriteriaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -209,21 +208,20 @@ public class DefaultFacade implements Facade {
     public List<ResponseContactWithoutCompanyDTO> findContactsWithoutCompany(int limit, int offset, LocalDate date) {
         Criteria<Contact> contactCriteria = new Criteria<>();
         setConditionsForAll(date, contactCriteria);
+        contactCriteria.addCondition(new IsNullCondition<>("account"));
 
-        Criteria<Account> accountCriteria = new Criteria<>();
-        accountCriteria.addCondition(new LessThanCondition<>("createdOn", date));
-
-        return contactRepository.findContactsJoinAccounts(contactCriteria, accountCriteria).stream().map(responseMapper::mapToContactWithoutCompanyDTO).toList();
+        return contactRepository.findAll(contactCriteria).stream().map(responseMapper::mapToContactWithoutCompanyDTO).toList();
     }
 
     @Override
     public long countContactsWithoutCompanies(LocalDate date) {
         Criteria<Contact> contactCriteria = new Criteria<>();
         setConditionsForAll(date, contactCriteria);
+        contactCriteria.addCondition(new IsNullCondition<>("account"));
 
-        Criteria<Account> accountCriteria = new Criteria<>();
-        accountCriteria.addCondition(new LessThanCondition<>("createdOn", date));
+//        Criteria<Account> accountCriteria = new Criteria<>();
+//        accountCriteria.addCondition(new LessThanCondition<>("createdOn", date));
 
-        return contactRepository.countContactsJoinAccounts(contactCriteria, accountCriteria);
+        return contactRepository.countAll(contactCriteria);
     }
 }

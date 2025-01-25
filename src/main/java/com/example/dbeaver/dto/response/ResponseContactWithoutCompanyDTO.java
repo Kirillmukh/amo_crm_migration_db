@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseContactWithoutCompanyDTO {
-    private ContactDTO contactDTO;
+    private ContactDTO contact;
 }

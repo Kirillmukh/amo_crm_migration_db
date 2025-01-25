@@ -47,7 +47,10 @@ public class MainController {
         CollectionModel<ResponseLeadDTO> model = CollectionModel.of(result, links);
         return Response.ok(model).status(200).build();
     }
-
+    @GetMapping("/new-contacts/count")
+    public long countContacts(@RequestParam(name = "date", defaultValue = "01-03-2024", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
+        return facade.countContactsWithoutCompanies(date);
+    }
     @GetMapping("/company/{id}")
     public Response companyById(@PathVariable String id,
                                 @RequestParam(name = "date", defaultValue = "01-03-2024", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
@@ -132,8 +135,8 @@ public class MainController {
     }
     @GetMapping("/new-contacts")
     public Response contactsWithoutCompany(@RequestParam(name = "limit", defaultValue = "500", required = false) int limit,
-                                             @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
-                                             @RequestParam(name = "date", defaultValue = "01-03-2024", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
+                                           @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
+                                           @RequestParam(name = "date", defaultValue = "01-03-2024", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
         List<ResponseContactWithoutCompanyDTO> result = facade.findContactsWithoutCompany(limit, offset, date);
         List<Link> links = new ArrayList<>();
         links.add(linkTo(methodOn(controllerClass).contactsWithoutCompany(limit, Math.max(0, offset - limit), date)).withRel("prevOrFirst"));
